@@ -35,7 +35,7 @@ public class RebakeModel {
                     (Map<ModelResourceLocation, BakedModel>) modelsField.get(modelManager);
 
             bakedRegistry.put(originModel, replaceModel);
-            HardcoreAstagesItem.LOGGER.info("Replaced Success: {} for {}", originModel, replaceModel);
+            HardcoreAstagesItem.LOGGER.debug("Replaced Success: {} for {}", originModel, replaceModel);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             HardcoreAstagesItem.LOGGER.error("Replaced Failed: {} for {}", originModel, replaceModel);
             HardcoreAstagesItem.LOGGER.error("Exception: ", e);
@@ -65,7 +65,7 @@ public class RebakeModel {
 
                     replaceModel(originModel, replaceModel, modelManager);
 
-                    HardcoreAstagesItem.LOGGER.info("Reload Model Item Name: {}", itemRegistryName);
+                    HardcoreAstagesItem.LOGGER.debug("Reload Model Item Name: {}", itemRegistryName);
                 }
             }
         }
@@ -107,6 +107,7 @@ public class RebakeModel {
     public static void registerCommands(RegisterClientCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         dispatcher.register(Commands.literal("reloadmodel").requires(cs -> cs.hasPermission(0)).executes(context -> {
+            onStageRemoved(null);
             reloadModel();
             return 1;
         }));
