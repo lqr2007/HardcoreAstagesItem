@@ -1,10 +1,16 @@
 package com.liquor.hardcoreastagesitem;
 
+import com.liquor.hardcoreastagesitem.events.astagesEvent;
+import com.liquor.hardcoreastagesitem.register.commands;
+import com.liquor.hardcoreastagesitem.register.unknownItem;
+import com.liquor.hardcoreastagesitem.utils.getItemList;
+import com.liquor.hardcoreastagesitem.utils.modelOperation;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 import net.neoforged.fml.common.Mod;
@@ -20,23 +26,20 @@ public class HardcoreAstagesItem {
 
     public static Map<String, BakedModel> replacedMap = new HashMap<>();
 
-    public static boolean isExecuted = false;
-
     public HardcoreAstagesItem(IEventBus modEventBus) {
 
-        UnknownItem.register(modEventBus);
+        unknownItem.register(modEventBus);
 
-        NeoForge.EVENT_BUS.register(RebakeModel.class);
-        NeoForge.EVENT_BUS.addListener(this::onPlayerEnterWorld);
-
+        NeoForge.EVENT_BUS.addListener(this::onPlayerLoggedInEvent);
+        NeoForge.EVENT_BUS.register(astagesEvent.class);
+        NeoForge.EVENT_BUS.register(commands.class);
     }
 
     @SubscribeEvent
-    private void onPlayerEnterWorld(RenderGuiEvent.Post event) {
-        if (!isExecuted) {
-            isExecuted = true;
-            RebakeModel.onStageRemoved(null);
-            RebakeModel.reloadModel();
-        }
+    public void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+
+        modelOperation.replaceModel(getItemList.getUnknownItemList(player), "lock");
+        modelOperation.replaceModel(getItemList.getUnlockItemList(player), "unlock");
     }
 }
