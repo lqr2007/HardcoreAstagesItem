@@ -1,10 +1,10 @@
 package com.liquor.hardcoreastagesitem;
 
 import com.liquor.hardcoreastagesitem.events.astagesEvent;
-import com.liquor.hardcoreastagesitem.register.commands;
-import com.liquor.hardcoreastagesitem.register.unknownItem;
-import com.liquor.hardcoreastagesitem.utils.getItemList;
-import com.liquor.hardcoreastagesitem.utils.modelOperation;
+import com.liquor.hardcoreastagesitem.register.Commands;
+import com.liquor.hardcoreastagesitem.register.UnknownItem;
+import com.liquor.hardcoreastagesitem.utils.Getitemlist;
+import com.liquor.hardcoreastagesitem.utils.ModelOperation;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
@@ -28,18 +28,18 @@ public class HardcoreAstagesItem {
 
     public HardcoreAstagesItem(IEventBus modEventBus) {
 
-        unknownItem.register(modEventBus);
+        UnknownItem.register(modEventBus);
 
         NeoForge.EVENT_BUS.addListener(this::onPlayerLoggedInEvent);
         NeoForge.EVENT_BUS.register(astagesEvent.class);
-        NeoForge.EVENT_BUS.register(commands.class);
+        NeoForge.EVENT_BUS.register(Commands.class);
     }
 
     @SubscribeEvent
     public void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
 
-        modelOperation.replaceModel(getItemList.getUnknownItemList(player), "lock");
-        modelOperation.replaceModel(getItemList.getUnlockItemList(player), "unlock");
+        ModelOperation.replaceModel(Getitemlist.getUnknownItemList(player), "lock");
+        ModelOperation.replaceModel(Getitemlist.getUnlockItemList(player), "unlock");
     }
 }

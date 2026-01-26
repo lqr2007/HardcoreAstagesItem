@@ -6,7 +6,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-public class unknownItem {
+public class UnknownItem {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(HardcoreAstagesItem.MODID);
 
     public static final DeferredItem<Item> unknownItem = ITEMS.register("unknown_item",

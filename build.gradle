@@ -143,7 +143,10 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    implementation "curse.maven:AStages-1120180:6892933"
+    implementation "curse.maven:AStages-1120180:7513450"
+    runtimeOnly "curse.maven:KubeJS-238086:7143884"
+    runtimeOnly "curse.maven:ProbeJS-585406:7105159"
+    runtimeOnly "curse.maven:Rhino-416294:7104526"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

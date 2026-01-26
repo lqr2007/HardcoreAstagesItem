@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-public class modelOperation {
+public class ModelOperation {
 
     @SuppressWarnings("unchecked")
     public static void replaceModel(List<Item> itemList, String method) {
