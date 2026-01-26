@@ -1,6 +1,6 @@
 package com.liquor.hardcoreastagesitem;
 
-import com.liquor.hardcoreastagesitem.events.astagesEvent;
+import com.liquor.hardcoreastagesitem.events.AstagesEvent;
 import com.liquor.hardcoreastagesitem.register.Commands;
 import com.liquor.hardcoreastagesitem.register.UnknownItem;
 import com.liquor.hardcoreastagesitem.utils.Getitemlist;
@@ -31,7 +31,7 @@ public class HardcoreAstagesItem {
         UnknownItem.register(modEventBus);
 
         NeoForge.EVENT_BUS.addListener(this::onPlayerLoggedInEvent);
-        NeoForge.EVENT_BUS.register(astagesEvent.class);
+        NeoForge.EVENT_BUS.register(AstagesEvent.class);
         NeoForge.EVENT_BUS.register(Commands.class);
     }
 
