@@ -5,7 +5,7 @@ import com.alessandro.astages.api.event.player.StageRemovedPlayerEvent;
 import com.liquor.hardcoreastagesitem.utils.Getitemlist;
 import com.liquor.hardcoreastagesitem.utils.ModelOperation;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class AstagesEvent {
     @SubscribeEvent

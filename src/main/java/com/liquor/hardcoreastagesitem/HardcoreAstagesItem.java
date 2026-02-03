@@ -7,13 +7,14 @@ import com.liquor.hardcoreastagesitem.utils.Getitemlist;
 import com.liquor.hardcoreastagesitem.utils.ModelOperation;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
-import net.neoforged.fml.common.Mod;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,13 +27,14 @@ public class HardcoreAstagesItem {
 
     public static Map<String, BakedModel> replacedMap = new HashMap<>();
 
-    public HardcoreAstagesItem(IEventBus modEventBus) {
+    public HardcoreAstagesItem() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         UnknownItem.register(modEventBus);
 
-        NeoForge.EVENT_BUS.addListener(this::onPlayerLoggedInEvent);
-        NeoForge.EVENT_BUS.register(AstagesEvent.class);
-        NeoForge.EVENT_BUS.register(Commands.class);
+        MinecraftForge.EVENT_BUS.addListener(this::onPlayerLoggedInEvent);
+        MinecraftForge.EVENT_BUS.register(AstagesEvent.class);
+        MinecraftForge.EVENT_BUS.register(Commands.class);
     }
 
     @SubscribeEvent

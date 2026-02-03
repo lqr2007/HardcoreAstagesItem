@@ -31,7 +31,7 @@ public class ModelOperation {
         Map<ModelResourceLocation, BakedModel> bakedRegistry;
 
         try {
-            Field field = ModelManager.class.getDeclaredField("bakedRegistry");
+            Field field = ModelManager.class.getDeclaredField("f_119397_");
             field.setAccessible(true);
             bakedRegistry = (Map<ModelResourceLocation, BakedModel>) field.get(modelManager);
         } catch (Exception e) {
