@@ -10,20 +10,23 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ModelOperation {
 
-    @SuppressWarnings("unchecked")
-    public static void replaceModel(List<Item> itemList, String method) {
+    private static final Map<ResourceLocation, BakedModel> originalCache = new HashMap<>();
 
-        Minecraft minecraft = Minecraft.getInstance();
-        ModelManager modelManager = minecraft.getModelManager();
+    @SuppressWarnings("unchecked")
+    public static void replaceModel(List<Item> itemList, boolean lock) {
+
+        Minecraft mc = Minecraft.getInstance();
+        ModelManager modelManager = mc.getModelManager();
 
         ResourceLocation unknownRes = ResourceLocation.parse("hardcoreastagesitem:unknown_item");
-        ModelResourceLocation unknownModelLoc = new ModelResourceLocation(unknownRes, "inventory");
-        BakedModel unknownModel = modelManager.getModel(unknownModelLoc);
+        ModelResourceLocation unknownLoc = new ModelResourceLocation(unknownRes, "inventory");
+        BakedModel unknownModel = modelManager.getModel(unknownLoc);
 
         Map<ModelResourceLocation, BakedModel> bakedRegistry;
 
@@ -31,43 +34,41 @@ public class ModelOperation {
             Field field = ModelManager.class.getDeclaredField("bakedRegistry");
             field.setAccessible(true);
             bakedRegistry = (Map<ModelResourceLocation, BakedModel>) field.get(modelManager);
-
         } catch (Exception e) {
-            HardcoreAstagesItem.LOGGER.error("Unable to access bakedRegistry field!", e);
+            HardcoreAstagesItem.LOGGER.error("Cannot access bakedRegistry", e);
             return;
         }
 
         for (Item item : itemList) {
 
-            ResourceLocation registryName = BuiltInRegistries.ITEM.getKey(item);
+            ResourceLocation id = BuiltInRegistries.ITEM.getKey(item);
+            ModelResourceLocation modelLoc = new ModelResourceLocation(id, "inventory");
 
-            ModelResourceLocation modelLoc = new ModelResourceLocation(registryName, "inventory");
+            if (lock) {
 
-            if (method.equals("lock")) {
+                // 如果已经锁过，不要重复保存
+                if (originalCache.containsKey(id)) continue;
 
-                BakedModel originalModel = modelManager.getModel(modelLoc);
+                BakedModel original = modelManager.getModel(modelLoc);
 
-                HardcoreAstagesItem.replacedMap.put(registryName.toString(), originalModel);
-
+                originalCache.put(id, original);
                 bakedRegistry.put(modelLoc, unknownModel);
-                HardcoreAstagesItem.LOGGER.debug("Locked model: {} to unknown", registryName);
-            } else if (method.equals("unlock")) {
 
-                BakedModel original = HardcoreAstagesItem.replacedMap.get(registryName.toString());
+                HardcoreAstagesItem.LOGGER.debug("LOCK {}", id);
 
-                if (original == null) {
-                    HardcoreAstagesItem.LOGGER.warn("No original model stored for {}, cannot unlock.", registryName);
-                    continue;
-                }
+            } else {
+
+                BakedModel original = originalCache.remove(id);
+
+                // 没锁过就不需要解锁
+                if (original == null) continue;
 
                 bakedRegistry.put(modelLoc, original);
-                HardcoreAstagesItem.LOGGER.debug("Unlocked model: {} to restored", registryName);
-            } else {
-                HardcoreAstagesItem.LOGGER.warn("Unknown method '{}' used in replaceModel()", method);
-                return;
+
+                HardcoreAstagesItem.LOGGER.debug("UNLOCK {}", id);
             }
         }
 
-        minecraft.getItemRenderer().onResourceManagerReload(minecraft.getResourceManager());
+        mc.getItemRenderer().onResourceManagerReload(mc.getResourceManager());
     }
 }

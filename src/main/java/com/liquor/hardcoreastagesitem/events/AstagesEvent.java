@@ -11,11 +11,11 @@ public class AstagesEvent {
     @SubscribeEvent
     public static void onStageRemoved(StageRemovedPlayerEvent event) {
         Player player = event.getPlayer();
-        ModelOperation.replaceModel(Getitemlist.getUnknownItemList(player), "lock");
+        ModelOperation.replaceModel(Getitemlist.getUnknownItemList(player), true);
     }
     @SubscribeEvent
     public static void onStageAdd(StageAddedPlayerEvent event) {
         Player player = event.getPlayer();
-        ModelOperation.replaceModel(Getitemlist.getUnlockItemList(player), "unlock");
+        ModelOperation.replaceModel(Getitemlist.getItem(player), false);
     }
 }

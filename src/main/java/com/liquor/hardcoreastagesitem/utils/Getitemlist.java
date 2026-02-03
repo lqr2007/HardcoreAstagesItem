@@ -1,7 +1,8 @@
 package com.liquor.hardcoreastagesitem.utils;
 
-import com.alessandro.astages.api.holder.AHolder;
+
 import com.alessandro.astages.api.AStagesUtils;
+import com.alessandro.astages.api.holder.AHolder;
 import com.alessandro.astages.core.ARestrictionManager;
 import com.alessandro.astages.core.server.manager.AItemManager;
 import com.alessandro.astages.core.server.restriction.item.AItemRestriction;
@@ -10,46 +11,48 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Getitemlist {
 
-    public static List<Item> unlockItems = new ArrayList<>();
-    public static List<Item> unknownItems = new ArrayList<>();
+    static AItemManager itemServerManager = ARestrictionManager.ITEM_INSTANCE;
 
-    public static List<Item> getUnlockItemList(Player player) {
-        AItemManager itemManager = ARestrictionManager.ITEM_INSTANCE;
-        List<AItemRestriction> itemRestrictions = itemManager.getItemRestrictions();
+    public static List<Item> getItem(Player player) {
+        Set<String> playerStage = new HashSet<>(AStagesUtils.getStages(AHolder.player(player)));
+        Set<Item> unknownItem = new HashSet<>(getUnknownItemList(player));
 
-        unlockItems.clear();
+        HardcoreAstagesItem.LOGGER.info("get player stages: {}", playerStage);
 
-        for (AItemRestriction restriction : itemRestrictions) {
-            String stage = restriction.getStage();
+        Set<Item> unlock = new HashSet<>();
 
-            if (AStagesUtils.hasStage(AHolder.player(player), stage)) {
-                unlockItems.addAll(restriction.getItems());
+        for (AItemRestriction rule : itemServerManager.getItemRestrictions()) {
+            if (playerStage.contains(rule.getStage())) {
+                for (Item item : rule.getItems()) {
+                    if (!unknownItem.contains(item)) {
+                        unlock.add(item);
+                        HardcoreAstagesItem.LOGGER.debug("get unlock items: {}", item);
+                    }
+                }
             }
+            HardcoreAstagesItem.LOGGER.debug("item: {}, stage: {}", rule.getItems(), rule.getStage());
         }
-
-        HardcoreAstagesItem.LOGGER.info("Get Unlock Item List: {}", unlockItems);
-        return unlockItems;
+        return new ArrayList<>(unlock);
     }
 
     public static List<Item> getUnknownItemList(Player player) {
-        AItemManager itemManager = ARestrictionManager.ITEM_INSTANCE;
-        List<AItemRestriction> itemRestrictions = itemManager.getItemRestrictions();
+        Set<String> playerStage = new HashSet<>(AStagesUtils.getStages(AHolder.player(player)));
 
-        unknownItems.clear();
+        Set<Item> unknown = new HashSet<>();
 
-        for (AItemRestriction restriction : itemRestrictions) {
-            String stage = restriction.getStage();
-
-            if (!AStagesUtils.hasStage(AHolder.player(player), stage)) {
-                unknownItems.addAll(restriction.getItems());
+        for (AItemRestriction rule : itemServerManager.getItemRestrictions()) {
+            if (!playerStage.contains(rule.getStage())) {
+                unknown.addAll(rule.getItems());
+                HardcoreAstagesItem.LOGGER.info("get unknown items: {}", rule.getItems());
             }
         }
 
-        HardcoreAstagesItem.LOGGER.info("Get Unknown Item List: {}", unknownItems);
-        return unknownItems;
+        return new ArrayList<>(unknown);
     }
 }

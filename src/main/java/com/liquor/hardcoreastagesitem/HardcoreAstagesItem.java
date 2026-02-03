@@ -39,7 +39,7 @@ public class HardcoreAstagesItem {
     public void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
 
-        ModelOperation.replaceModel(Getitemlist.getUnknownItemList(player), "lock");
-        ModelOperation.replaceModel(Getitemlist.getUnlockItemList(player), "unlock");
+        ModelOperation.replaceModel(Getitemlist.getUnknownItemList(player), true);
+        ModelOperation.replaceModel(Getitemlist.getItem(player), false);
     }
 }

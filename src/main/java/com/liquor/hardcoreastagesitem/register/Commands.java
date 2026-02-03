@@ -16,8 +16,8 @@ public class Commands {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         dispatcher.register(net.minecraft.commands.Commands.literal("reloadmodel").requires(cs -> cs.hasPermission(0)).executes(context -> {
             if (player != null) {
-                ModelOperation.replaceModel(Getitemlist.getUnknownItemList(player), "lock");
-                ModelOperation.replaceModel(Getitemlist.getUnlockItemList(player), "unlock");
+                ModelOperation.replaceModel(Getitemlist.getUnknownItemList(player), true);
+                ModelOperation.replaceModel(Getitemlist.getItem(player), false);
             }
             return 1;
         }));
