@@ -1,12 +1,13 @@
 package com.liquor.hardcoreastagesitem;
 
 import com.liquor.hardcoreastagesitem.events.AstagesEvent;
-import com.liquor.hardcoreastagesitem.register.Commands;
+import com.liquor.hardcoreastagesitem.register.Command;
 import com.liquor.hardcoreastagesitem.register.UnknownItem;
 import com.liquor.hardcoreastagesitem.utils.Getitemlist;
 import com.liquor.hardcoreastagesitem.utils.ModelOperation;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -34,7 +35,11 @@ public class HardcoreAstagesItem {
 
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLoggedInEvent);
         MinecraftForge.EVENT_BUS.register(AstagesEvent.class);
-        MinecraftForge.EVENT_BUS.register(Commands.class);
+        MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
+    }
+
+    public void onRegisterCommands(RegisterClientCommandsEvent event) {
+        Command.registerCommands(event);
     }
 
     @SubscribeEvent
