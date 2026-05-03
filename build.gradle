@@ -143,8 +143,8 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    implementation "curse.maven:AStages-1120180:7513450"
-    runtimeOnly "curse.maven:KubeJS-238086:7143884"
+    implementation "curse.maven:AStages-1120180:8010695"
+    runtimeOnly "curse.maven:KubeJS-238086:8012065"
     runtimeOnly "curse.maven:ProbeJS-585406:7105159"
     runtimeOnly "curse.maven:Rhino-416294:7104526"
 }

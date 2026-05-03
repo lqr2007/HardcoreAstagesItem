@@ -91,3 +91,10 @@ description='''${mod_description}'''
 # stop your mod loading on the server for example.
 #[features.${mod_id}]
 #openGLVersion="[3.2,)"
+
+[[dependencies.${mod_id}]]
+modId="astages"
+type="required"
+versionRange="[2.0.3-1.21.1,)"
+ordering="NONE"
+side="BOTH"
